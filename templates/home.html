@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Prediction</title>
+</head>
+<body>
+    <h1>Loan Prediction</h1>
+    <form id="loan-form">
+        <label for="ApplicantIncome">Applicant Income.Do not enter currency symbol.E.g. for $500, enter 500:</label>
+        <input type="number" name="ApplicantIncome" id="ApplicantIncome" required>
+        <br>
+
+        <label for="CoapplicantIncome">Coapplicant Income.Do not enter currency symbol.E.g. for $300, enter 300</label>
+        <input type="number" name="CoapplicantIncome" id="CoapplicantIncome" required>
+        <br>
+
+        <label for="LoanAmount">Loan Amount in thousand dollars.E.g. for 181000 enter 181</label>
+        <input type="number" name="LoanAmount" id="LoanAmount" required>
+        <br>
+
+        <label for="Credit_History">Credit History. Enter 1 if you have credit history and 0 otherwise.</label>
+        <input type="number" name="Credit_History" id="Credit_History" required>
+        <br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="prediction-result"></div>
+
+    <script>
+        document.getElementById('loan-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form data
+            const formData = new FormData(event.target);
+
+            // Make POST request to the /predict endpoint
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response Data:', data);
+                // Display prediction result
+                const predictionResult = data.prediction;
+                console.log('Prediction Result:', predictionResult); // Log the prediction result for debugging
+                document.getElementById('prediction-result').innerText = `Prediction: ${predictionResult}`;
+            })
+            .catch(error => {
+                // Handle error if any
+                console.error('Error occurred during prediction:', error);
+                document.getElementById('prediction-result').innerText = 'Error occurred during prediction.';
+            });
+        });
+    </script>
+</body>
+</html>
